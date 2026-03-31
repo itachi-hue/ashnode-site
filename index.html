@@ -764,7 +764,7 @@ packet = memory.<span class="fn">recall</span>(<span class="st">"What is the pat
         building long-lived agents in production.
       </p>
 
-      <form id="accessForm">
+      <form id="accessForm" action="https://formspree.io/f/xnjovkkv" method="POST">
         <div class="form-row">
           <div class="field">
             <label for="fname">First Name</label>
@@ -776,7 +776,7 @@ packet = memory.<span class="fn">recall</span>(<span class="st">"What is the pat
           </div>
         </div>
         <div class="field">
-          <label for="email">Work Email</label>
+          <label for="email">Email</label>
           <input type="email" id="email" name="email" placeholder="jane@company.com" required />
         </div>
         <div class="field">
@@ -784,20 +784,11 @@ packet = memory.<span class="fn">recall</span>(<span class="st">"What is the pat
           <input type="text" id="company" name="company" placeholder="Acme AI" required />
         </div>
         <div class="field">
-          <label for="vertical">Primary Vertical</label>
-          <select id="vertical" name="vertical" required>
-            <option value="" disabled selected>Select your vertical</option>
-            <option>Voice AI</option>
-            <option>Healthcare</option>
-            <option>Legal</option>
-            <option>Compliance / Finance</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
           <label for="usecase">What are you building? (1–2 sentences)</label>
           <textarea id="usecase" name="usecase" placeholder="We're building a long-lived agent that..." required></textarea>
         </div>
+        <input type="hidden" name="_subject" value="Ashnode Early Access Request" />
+        <input type="text" name="_gotcha" style="display:none" />
         <button type="submit" class="form-submit">Request Early Access →</button>
         <p class="form-note">We'll respond within 48 hours. Access is granted under NDA.</p>
       </form>
@@ -820,30 +811,31 @@ packet = memory.<span class="fn">recall</span>(<span class="st">"What is the pat
 </footer>
 
 <script>
-  document.getElementById('accessForm').addEventListener('submit', function(e) {
+  document.getElementById('accessForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('.form-submit');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
 
-    const f = e.target;
-    const fname = f.fname.value;
-    const lname = f.lname.value;
-    const email = f.email.value;
-    const company = f.company.value;
-    const vertical = f.vertical.value;
-    const usecase = f.usecase.value;
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
 
-    const subject = encodeURIComponent('Ashnode Early Access Request — ' + company);
-    const body = encodeURIComponent(
-      'Name: ' + fname + ' ' + lname + '\n' +
-      'Email: ' + email + '\n' +
-      'Company: ' + company + '\n' +
-      'Vertical: ' + vertical + '\n\n' +
-      'What they are building:\n' + usecase
-    );
-
-    window.location.href = 'mailto:vivekbs.10@gmail.com?subject=' + subject + '&body=' + body;
-
-    f.style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      } else {
+        btn.textContent = 'Something went wrong — email vivekbs.10@gmail.com';
+        btn.disabled = false;
+      }
+    } catch (_) {
+      btn.textContent = 'Something went wrong — email vivekbs.10@gmail.com';
+      btn.disabled = false;
+    }
   });
 </script>
 
