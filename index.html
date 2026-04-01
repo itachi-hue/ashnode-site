@@ -354,56 +354,65 @@
     .timeline-text { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
     .timeline-text strong { color: var(--text); display: block; margin-bottom: 0.2rem; font-size: 0.92rem; }
 
-    /* COMPARE */
-    .compare {
+    /* COMPARE TABLE — shared grid for perfect row alignment */
+    .compare-table {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      gap: 0 1.5rem;
     }
 
-    @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
-
-    .compare-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.75rem;
+    @media (max-width: 640px) {
+      .compare-table { grid-template-columns: 1fr; }
+      .compare-table .ct-header.good-col,
+      .compare-table .ct-row.good-col { margin-top: 1rem; }
     }
 
-    .compare-card.bad { border-color: rgba(239,68,68,0.2); }
-    .compare-card.good { border-color: rgba(34,197,94,0.2); }
-
-    .compare-header {
+    .ct-header {
+      padding: 1rem 1.25rem;
+      border-radius: 10px 10px 0 0;
       display: flex;
       align-items: center;
       gap: 0.6rem;
       font-weight: 700;
-      font-size: 0.88rem;
-      margin-bottom: 1.25rem;
+      font-size: 0.82rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
     }
 
-    .compare-header .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .bad .dot { background: var(--red); }
-    .good .dot { background: var(--green); }
-    .bad .compare-header { color: var(--red); }
-    .good .compare-header { color: var(--green); }
+    .ct-header.bad-col { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.2); border-bottom: none; color: var(--red); }
+    .ct-header.good-col { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.2); border-bottom: none; color: var(--green); }
+    .ct-header .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .bad-col .dot { background: var(--red); }
+    .good-col .dot { background: var(--green); }
 
-    .compare-list { list-style: none; }
-    .compare-list li {
+    .ct-row {
+      padding: 0.75rem 1.25rem;
       font-size: 0.875rem;
       color: var(--muted);
-      padding: 0.5rem 0;
-      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: flex-start;
       gap: 0.6rem;
       line-height: 1.5;
+      border-left: 1px solid rgba(239,68,68,0.2);
+      border-right: 1px solid rgba(239,68,68,0.2);
+      border-bottom: 1px solid var(--border);
     }
-    .compare-list li:last-child { border-bottom: none; }
-    .bad .compare-list li::before { content: '✗'; color: var(--red); opacity: 0.7; flex-shrink: 0; }
-    .good .compare-list li::before { content: '✓'; color: var(--green); flex-shrink: 0; }
+
+    .ct-row.good-col {
+      border-left-color: rgba(34,197,94,0.2);
+      border-right-color: rgba(34,197,94,0.2);
+    }
+
+    .ct-row.last-row {
+      border-radius: 0 0 10px 10px;
+      border-bottom-color: rgba(239,68,68,0.2);
+    }
+
+    .ct-row.last-row.good-col { border-bottom-color: rgba(34,197,94,0.2); }
+
+    .ct-row::before { flex-shrink: 0; font-size: 0.85rem; }
+    .ct-row.bad-col::before { content: '✗'; color: var(--red); opacity: 0.7; }
+    .ct-row.good-col::before { content: '✓'; color: var(--green); }
 
     /* FEATURES */
     .features-top {
@@ -455,6 +464,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
+      align-items: start;
     }
 
     @media (max-width: 720px) { .code-compare { grid-template-columns: 1fr; } }
@@ -488,6 +498,7 @@
       line-height: 1.75;
       font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
       flex: 1;
+      min-height: 340px;
     }
 
     .code-panel.bad-panel pre { border-color: rgba(239,68,68,0.2); }
@@ -653,18 +664,19 @@
 <section class="hero">
   <div class="badge"><span class="badge-dot"></span>Private Beta &nbsp;·&nbsp; v0.1.0</div>
 
-  <h1>Your agent is acting on facts<br />that <em>changed weeks ago</em></h1>
+  <h1>The memory infrastructure<br />for <em>agents you can trust</em></h1>
 
   <div class="hero-pain">
-    <div class="hero-pain-label">Real failure mode</div>
-    <p>A voice agent quotes a <strong>drug dosage updated 3 weeks prior</strong>. A legal agent cites a <strong>contract value that was amended</strong>. A clinical copilot surfaces <strong>an allergy note and its contradicting prescription — both</strong>. Your RAG retrieved correctly. Your agent answered wrong.</p>
+    <div class="hero-pain-label">What happens without it</div>
+    <p>A voice agent quotes a <strong>drug dosage updated 3 weeks prior</strong>. A legal agent cites a <strong>contract value that was amended</strong>. A clinical copilot surfaces <strong>an allergy note and its contradicting prescription — both</strong>. Your RAG retrieved correctly. Your agent answered wrong. And you have no audit trail to explain why.</p>
   </div>
 
   <p class="hero-sub">
-    Ashnode is the memory layer between your vector store and your LLM.
-    Every recall returns only what is <strong style="color:var(--text)">currently true</strong> —
-    superseded facts excluded, contradictions surfaced, full provenance attached,
-    and a determinism guarantee baked in.
+    Ashnode is a new infrastructure layer between your vector store and your LLM.
+    It gives agents <strong style="color:var(--text)">supersession</strong> (only current facts),
+    <strong style="color:var(--text)">contradiction detection</strong> (conflicts surfaced, not silently passed),
+    <strong style="color:var(--text)">full provenance</strong> (every decision auditable),
+    and <strong style="color:var(--text)">deterministic recall</strong> (same query = same packet, always).
   </p>
 
   <div class="hero-actions">
@@ -754,29 +766,27 @@
       current, what has been superseded, or whether two retrieved facts
       contradict each other. That gap is where agents fail.
     </p>
-    <div class="compare">
-      <div class="compare-card bad">
-        <div class="compare-header"><span class="dot"></span>Plain Vector RAG</div>
-        <ul class="compare-list">
-          <li>Returns all versions of a fact — old and new — equally ranked</li>
-          <li>No concept of supersession or what "current" means</li>
-          <li>Silently passes contradictions to the LLM</li>
-          <li>No audit trail — impossible to explain why an agent answered as it did</li>
-          <li>Non-reproducible — same query can return different context</li>
-          <li>No signal when context is incomplete</li>
-        </ul>
-      </div>
-      <div class="compare-card good">
-        <div class="compare-header"><span class="dot"></span>Ashnode</div>
-        <ul class="compare-list">
-          <li>Superseded facts automatically excluded — only current truth returned</li>
-          <li>Full supersession chain available when trend queries need history</li>
-          <li>Contradictions detected and surfaced within every retrieval</li>
-          <li>Full provenance per item — source, timestamp, decay score, sequence</li>
-          <li>Deterministic — same query + policy = identical packet, always</li>
-          <li>Explicit completeness flag when a policy cap is hit</li>
-        </ul>
-      </div>
+    <div class="compare-table">
+      <div class="ct-header bad-col"><span class="dot"></span>Plain Vector RAG</div>
+      <div class="ct-header good-col"><span class="dot"></span>Ashnode</div>
+
+      <div class="ct-row bad-col">Returns all versions of a fact — old and new — equally ranked</div>
+      <div class="ct-row good-col">Superseded facts automatically excluded — only current truth returned</div>
+
+      <div class="ct-row bad-col">No concept of supersession or what "current" means</div>
+      <div class="ct-row good-col">Full supersession chain available when trend queries need history</div>
+
+      <div class="ct-row bad-col">Silently passes contradictions to the LLM</div>
+      <div class="ct-row good-col">Contradictions detected and surfaced within every retrieval</div>
+
+      <div class="ct-row bad-col">No audit trail — impossible to explain why an agent answered as it did</div>
+      <div class="ct-row good-col">Full provenance per item — source, timestamp, decay score, sequence</div>
+
+      <div class="ct-row bad-col">Non-reproducible — same query can return different context</div>
+      <div class="ct-row good-col">Deterministic — same query + policy = identical packet, always</div>
+
+      <div class="ct-row last-row bad-col">No signal when context is incomplete</div>
+      <div class="ct-row last-row good-col">Explicit completeness flag when a policy cap is hit</div>
     </div>
   </div>
 </section>
@@ -853,23 +863,22 @@
     <div class="code-compare">
       <div class="code-panel bad-panel">
         <div class="code-panel-header"><span class="dot"></span>Without Ashnode — Plain RAG</div>
-        <pre><code><span class="cm"># RAG returns both versions — old and new</span>
+        <pre><code><span class="cm"># RAG returns all versions equally</span>
 results = vector_db.<span class="fn">search</span>(
     <span class="st">"patient BP"</span>, top_k=<span class="nm">5</span>
 )
 
-<span class="cm"># Agent receives:</span>
-<span class="cm">#  "Patient BP is 102 mmHg"  (3 months ago)</span>
-<span class="cm">#  "Patient BP is 104 mmHg"  (2 months ago)</span>
-<span class="cm">#  "Patient BP is 110 mmHg"  (current)</span>
-<span class="cm"># No timestamps. No ordering.</span>
+<span class="cm"># Agent receives all 3 — no ordering:</span>
+<span class="cm">#  "Patient BP is 102 mmHg"</span>
+<span class="cm">#  "Patient BP is 104 mmHg"</span>
+<span class="cm">#  "Patient BP is 110 mmHg"</span>
+<span class="cm"># No timestamps. No supersession.</span>
 <span class="cm"># No way to know which is current.</span>
 
-agent_answer = llm.<span class="fn">complete</span>(
-    <span class="st">"Patient BP: 102, 104, or 110 mmHg"</span>
-)
+agent_answer = llm.<span class="fn">complete</span>(results)
 <span class="cm"># LLM guesses. Sometimes wrong.</span>
-<span class="err"># No audit trail. Impossible to debug.</span>
+<span class="cm"># No audit trail. Impossible to debug.</span>
+<span class="err"># Agent answer: non-deterministic.</span>
 </code></pre>
         <div class="code-outcome bad">Agent receives 3 versions of the same fact with no way to determine which is current. LLM hallucinates a synthesis.</div>
       </div>
@@ -882,7 +891,7 @@ memory.<span class="fn">ingest</span>(content=<span class="st">"BP is 110"</span
 
 packet = memory.<span class="fn">recall</span>(<span class="st">"patient BP"</span>)
 
-<span class="cm"># packet.items → ["BP is 110 mmHg"]</span>
+<span class="cm"># packet.items → ["BP is 110 mmHg"] only</span>
 <span class="cm">#   .timestamp  → 2026-03-25T09:14:00Z</span>
 <span class="cm">#   .freshness  → 0.97</span>
 <span class="cm">#   .superseded → False</span>
@@ -891,6 +900,7 @@ packet = memory.<span class="fn">recall</span>(<span class="st">"patient BP"</sp
 agent_answer = llm.<span class="fn">complete</span>(packet)
 <span class="ok"># Agent answers from current truth only.</span>
 <span class="ok"># Full audit trail. Fully reproducible.</span>
+<span class="ok"># Agent answer: deterministic.</span>
 </code></pre>
         <div class="code-outcome good">Agent receives exactly one current fact with timestamp, freshness score, and provenance. Answer is correct and auditable.</div>
       </div>
