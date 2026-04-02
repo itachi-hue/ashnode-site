@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Why AI Agents Need an Epistemic Memory Layer — Ashnode</title>
-  <meta name="description" content="Long-lived AI agents fail not because the LLM is wrong, but because the memory is wrong. Here's why — and how to fix it." />
+  <title>Why Most Production AI Agents Fail — And the Epistemic Memory Layer That Fixes It</title>
+  <meta name="description" content="Most long-lived AI agents fail not because the LLM is wrong — but because their memory is lying to them. Here's the architecture that fixes it." />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -274,6 +274,44 @@
     .packet-table td:first-child { color: #c4b5fd; font-family: monospace; }
     .packet-table tr:last-child td { border-bottom: none; }
 
+    /* BEFORE / AFTER TABLE */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0 2rem;
+      font-size: 0.875rem;
+    }
+    .compare-table th {
+      padding: 0.65rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+    }
+    .compare-table th:nth-child(2) { color: var(--red); }
+    .compare-table th:nth-child(3) { color: var(--green); }
+    .compare-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: #c8c8d2;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .compare-table td:first-child {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      width: 130px;
+    }
+    .compare-table td:nth-child(2) { background: rgba(239,68,68,0.04); }
+    .compare-table td:nth-child(3) { background: rgba(34,197,94,0.04); }
+    .compare-table tr:last-child td { border-bottom: none; }
+
     /* CTA SECTION */
     .article-cta {
       background: linear-gradient(135deg, rgba(124,106,247,0.1) 0%, rgba(79,70,163,0.05) 100%);
@@ -380,10 +418,10 @@
     <span class="article-date">April 2026</span>
   </div>
 
-  <h1 class="article-title">Why AI Agents Need an Epistemic Memory Layer</h1>
+  <h1 class="article-title">Why Most Production AI Agents Fail — And the Epistemic Memory Layer That Fixes It</h1>
   <p class="article-subtitle">
-    Long-lived agents fail not because the LLM is wrong, but because the memory is wrong.
-    Plain vector search was never designed for facts that evolve over time. Here's what goes wrong — and how to fix it at the architecture level.
+    Most long-lived AI agents fail not because the LLM is wrong — but because their memory is lying to them.
+    Plain vector search was never designed for facts that evolve over time. Here's what goes wrong, and how to fix it at the architecture level.
   </p>
 
   <div class="article-body">
@@ -416,15 +454,56 @@
       </p>
     </div>
 
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Plain RAG</th>
+          <th>Ashnode</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Contract value</td>
+          <td>$2.5M and $3.2M returned together — LLM hedges between both</td>
+          <td>Only $3.2M (Amendment 1). Original superseded and hidden.</td>
+        </tr>
+        <tr>
+          <td>Governing law</td>
+          <td>Delaware and California both returned with no conflict signal</td>
+          <td>Only California. Delaware superseded in November 2025.</td>
+        </tr>
+        <tr>
+          <td>Litigation hold</td>
+          <td>May or may not appear depending on embedding similarity rank</td>
+          <td>Always included — semantically relevant to the query</td>
+        </tr>
+        <tr>
+          <td>Contradictions</td>
+          <td>Passed silently to the LLM</td>
+          <td>Detected and flagged in the packet before the LLM sees them</td>
+        </tr>
+        <tr>
+          <td>Audit trail</td>
+          <td>None — no record of what was retrieved or when</td>
+          <td>store_revision + policy_version stamped on every packet</td>
+        </tr>
+      </tbody>
+    </table>
+
     <p>
-      This is not an edge case. It is the default behavior of plain vector RAG applied to facts that evolve over time. And in legal, compliance, healthcare, and finance — exactly the domains where agents are being deployed — the cost of this failure is not a wrong chatbot response. It's liability.
+      <strong>This is not an edge case.</strong> It is the default behavior of plain vector RAG applied to facts that evolve over time.
+    </p>
+    <p>
+      In legal, compliance, healthcare, and finance — exactly the domains where agents are being deployed — the cost of this failure is not a wrong chatbot response. It's liability.
     </p>
 
     <h2>Why RAG doesn't know what "current" means</h2>
 
     <p>
-      Vector search was designed for static document retrieval. You have a corpus, you embed it, you find the nearest neighbours to a query. It does that job well. What it was never designed to do:
+      Vector search was designed for <strong>static document retrieval</strong>. You have a corpus, you embed it, you find the nearest neighbours to a query. It does that job well.
     </p>
+    <p>What it was never designed to do:</p>
 
     <ul>
       <li><strong>Track supersession</strong> — it has no concept that MSA Amendment 1 replaces the original value, not supplements it</li>
@@ -434,7 +513,7 @@
     </ul>
 
     <p>
-      These aren't missing features you can prompt-engineer around. They're structural properties of the retrieval architecture. You cannot fix a supersession problem with a better system prompt.
+      These aren't missing features you can prompt-engineer around. They're <strong>structural properties of the retrieval architecture.</strong> You cannot fix a supersession problem with a better system prompt.
     </p>
 
     <div class="diagram">
@@ -445,7 +524,10 @@
     <h2>What an epistemic memory layer does differently</h2>
 
     <p>
-      An epistemic memory layer sits between your data pipeline and your LLM. Its job is not storage or retrieval — it's the <strong>retrieval contract</strong>. Every query returns a bounded, inspectable context packet with four guarantees that plain RAG cannot provide:
+      An epistemic memory layer sits between your data pipeline and your LLM. Its job is not storage or retrieval — it's the <strong>retrieval contract</strong>.
+    </p>
+    <p>
+      Every query returns a bounded, inspectable context packet with four guarantees that plain RAG cannot provide:
     </p>
 
     <ul>
@@ -557,7 +639,10 @@ memory.ingest(
     print(<span class="tok-str">"Context was capped by policy — consider raising k"</span>)</code></pre>
 
     <p>
-      The agent receives exactly three items: the current contract value ($3.2M), the current governing law (California), and the active litigation hold. The $2.5M original and the Delaware governing law record are in the store — available for audit — but not returned by default recall. The LLM cannot see them unless you explicitly request superseded history.
+      The agent receives exactly three items: the current contract value ($3.2M), the current governing law (California), and the active litigation hold.
+    </p>
+    <p>
+      The $2.5M original and the Delaware governing law record are in the store — available for audit — but <strong>not returned by default recall</strong>. The LLM cannot see them unless you explicitly request superseded history.
     </p>
 
     <div class="callout good">
