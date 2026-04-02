@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why AI Agents Need an Epistemic Memory Layer — Ashnode</title>
+  <meta name="description" content="Long-lived AI agents fail not because the LLM is wrong, but because the memory is wrong. Here's why — and how to fix it." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #09090b;
+      --surface: #111113;
+      --surface2: #18181b;
+      --border: #1f1f23;
+      --accent: #7c6af7;
+      --accent-dim: #4f46a3;
+      --text: #e4e4e7;
+      --muted: #71717a;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #eab308;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(9,9,11,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    .nav-cta {
+      background: var(--accent) !important;
+      color: #fff !important;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem !important;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; text-decoration: none !important; }
+
+    /* ARTICLE LAYOUT */
+    .article-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 100px 2rem 80px;
+    }
+
+    /* HEADER */
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .article-tag {
+      background: rgba(124,106,247,0.15);
+      color: var(--accent);
+      border: 1px solid rgba(124,106,247,0.3);
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .article-date {
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    .article-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .article-subtitle {
+      font-size: 1.15rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* CONTENT */
+    .article-body h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin: 2.8rem 0 1rem;
+    }
+
+    .article-body h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2rem 0 0.75rem;
+    }
+
+    .article-body p {
+      color: #a1a1aa;
+      margin-bottom: 1.2rem;
+    }
+
+    .article-body strong { color: var(--text); }
+
+    .article-body ul, .article-body ol {
+      margin: 0.5rem 0 1.2rem 1.5rem;
+      color: #a1a1aa;
+    }
+
+    .article-body li { margin-bottom: 0.4rem; }
+
+    /* DIAGRAM */
+    .diagram {
+      margin: 2.5rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .diagram img {
+      width: 100%;
+      display: block;
+    }
+    .diagram-caption {
+      background: var(--surface);
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    /* CODE BLOCKS */
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    code {
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+      color: #c4b5fd;
+    }
+    pre code { color: #e4e4e7; }
+    .tok-kw { color: #c4b5fd; }
+    .tok-str { color: #86efac; }
+    .tok-comment { color: #52525b; }
+    .tok-fn { color: #7dd3fc; }
+    .tok-num { color: #fbbf24; }
+
+    /* CALLOUT BOXES */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .callout.warn { border-left-color: var(--red); }
+    .callout.good { border-left-color: var(--green); }
+    .callout p { margin-bottom: 0; }
+    .callout-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .callout.warn .callout-label { color: var(--red); }
+    .callout.good .callout-label { color: var(--green); }
+    .callout .callout-label { color: var(--accent); }
+
+    /* PACKET TABLE */
+    .packet-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .packet-table th {
+      background: var(--surface);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .packet-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: #a1a1aa;
+      vertical-align: top;
+    }
+    .packet-table td:first-child { color: #c4b5fd; font-family: monospace; }
+    .packet-table tr:last-child td { border-bottom: none; }
+
+    /* CTA SECTION */
+    .article-cta {
+      background: linear-gradient(135deg, rgba(124,106,247,0.1) 0%, rgba(79,70,163,0.05) 100%);
+      border: 1px solid rgba(124,106,247,0.25);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      margin: 3rem 0 1rem;
+    }
+    .article-cta h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+    .article-cta p {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; text-decoration: none; }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); text-decoration: none; }
+
+    /* DIVIDER */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .article-wrap { padding: 80px 1.25rem 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">Ash<span>node</span></a>
+  <ul class="nav-links">
+    <li><a href="/#features">Features</a></li>
+    <li><a href="/#use-cases">Use Cases</a></li>
+    <li><a href="/#access" class="nav-cta">Request Access</a></li>
+  </ul>
+</nav>
+
+<div class="article-wrap">
+
+  <a class="back-link" href="/">&#8592; Back to ashnode</a>
+
+  <div class="article-meta">
+    <span class="article-tag">Engineering</span>
+    <span class="article-date">April 2026</span>
+  </div>
+
+  <h1 class="article-title">Why AI Agents Need an Epistemic Memory Layer</h1>
+  <p class="article-subtitle">
+    Long-lived agents fail not because the LLM is wrong, but because the memory is wrong.
+    Plain vector search was never designed for facts that evolve over time. Here's what goes wrong — and how to fix it at the architecture level.
+  </p>
+
+  <div class="article-body">
+
+    <h2>The legal agent that gave wrong advice</h2>
+
+    <p>
+      A contract management agent is asked: <em>"What are the current terms of MSA-7 and what governing law applies?"</em>
+    </p>
+
+    <p>
+      The facts in the system look like this:
+    </p>
+
+    <ul>
+      <li>March 2025 — MSA-7 signed. Contract value: $2.5M. Governing law: Delaware.</li>
+      <li>July 2025 — Amendment 1 executed. Contract value revised to $3.2M.</li>
+      <li>November 2025 — Governing law changed to California via side letter.</li>
+      <li>January 2026 — Litigation hold placed on all MSA-7 documents.</li>
+    </ul>
+
+    <p>
+      The agent queries its vector store. Semantic search returns the original MSA, the amendment, and both governing law records — all ranked roughly equally by embedding similarity to the query. The LLM receives all of them. It produces an answer that hedges between $2.5M and $3.2M and references Delaware law, which was superseded eight months ago.
+    </p>
+
+    <div class="callout warn">
+      <div class="callout-label">The failure</div>
+      <p>
+        The agent didn't hallucinate. It faithfully summarised what it was given. The problem is what it was given — contradictory facts with no signal about which version is current.
+      </p>
+    </div>
+
+    <p>
+      This is not an edge case. It is the default behavior of plain vector RAG applied to facts that evolve over time. And in legal, compliance, healthcare, and finance — exactly the domains where agents are being deployed — the cost of this failure is not a wrong chatbot response. It's liability.
+    </p>
+
+    <h2>Why RAG doesn't know what "current" means</h2>
+
+    <p>
+      Vector search was designed for static document retrieval. You have a corpus, you embed it, you find the nearest neighbours to a query. It does that job well. What it was never designed to do:
+    </p>
+
+    <ul>
+      <li><strong>Track supersession</strong> — it has no concept that MSA Amendment 1 replaces the original value, not supplements it</li>
+      <li><strong>Surface contradictions</strong> — it returns "Delaware" and "California" with equal confidence and no flag that they conflict</li>
+      <li><strong>Decay relevance over time</strong> — a fact from 18 months ago ranks the same as a fact from last week if the embeddings are similar</li>
+      <li><strong>Produce a reproducible packet</strong> — run the same query twice after a new document is ingested and you get different results with no record of what changed</li>
+    </ul>
+
+    <p>
+      These aren't missing features you can prompt-engineer around. They're structural properties of the retrieval architecture. You cannot fix a supersession problem with a better system prompt.
+    </p>
+
+    <div class="diagram">
+      <img src="../assets/blog-rag-problem.png" alt="The RAG problem for legal agents" />
+      <div class="diagram-caption">Plain RAG returns all versions of a fact equally — no concept of current, no contradiction signal, no audit trail.</div>
+    </div>
+
+    <h2>What an epistemic memory layer does differently</h2>
+
+    <p>
+      An epistemic memory layer sits between your data pipeline and your LLM. Its job is not storage or retrieval — it's the <strong>retrieval contract</strong>. Every query returns a bounded, inspectable context packet with four guarantees that plain RAG cannot provide:
+    </p>
+
+    <ul>
+      <li><strong>Supersession enforced</strong> — when a newer fact replaces an older one, the old version is hidden by default. The agent always sees the current state.</li>
+      <li><strong>Contradictions surfaced</strong> — tensions between retrieved facts are detected and attached to the packet, not silently passed to the LLM.</li>
+      <li><strong>Freshness scored</strong> — every item carries its age, decay factor, and supersession status. The agent knows this fact is three days old, that one is six months old.</li>
+      <li><strong>Deterministic and replayable</strong> — the same query against the same memory state always returns an identical packet. If an agent makes a wrong decision, you can reconstruct exactly what it knew.</li>
+    </ul>
+
+    <p>
+      This is Ashnode. It runs locally, CPU-only, with sub-2ms p95 recall at 50,000 items. No external dependencies. No API keys required for the default setup.
+    </p>
+
+    <h2>How Ashnode works</h2>
+
+    <div class="diagram">
+      <img src="../assets/blog-ashnode-architecture.png" alt="Ashnode architecture diagram" />
+      <div class="diagram-caption">Ashnode sits between your data pipeline and your LLM. Ingest claims in, get bounded context packets out.</div>
+    </div>
+
+    <p>
+      There are three components:
+    </p>
+
+    <h3>1. The store and index</h3>
+    <p>
+      Claims are stored in SQLite (WAL mode, durable across restarts) and indexed in an HNSW graph for approximate nearest-neighbour search. HNSW gives O(log N) query time — latency grows at 0.14x for a 100x corpus increase. At 50K items, p95 recall is under 2ms.
+    </p>
+
+    <h3>2. The background brain</h3>
+    <p>
+      A daemon thread that runs NLI (Natural Language Inference) contradiction detection asynchronously after every ingest. It scans each new claim against its nearest neighbours using a cross-encoder model, stores contradiction records when found, and never blocks the ingest path. Your agent sees contradiction flags on the <em>next</em> recall after detection — typically within milliseconds on modern hardware.
+    </p>
+
+    <h3>3. The recall contract</h3>
+    <p>
+      <code>recall(query, policy)</code> returns a structured context packet. The policy controls how many items to return (<code>k</code>), how many contradictions to surface (<code>c</code>), decay half-life (<code>tau</code>), and whether superseded history is included. Every packet carries a <code>store_revision</code> — a monotonic write counter that pins the exact memory state that produced it.
+    </p>
+
+    <h2>The legal agent, rebuilt with Ashnode</h2>
+
+    <p>
+      Let's walk through the same contract lifecycle, this time with Ashnode as the memory layer.
+    </p>
+
+    <h3>Ingestion</h3>
+
+<pre><code><span class="tok-kw">from</span> ashnode <span class="tok-kw">import</span> Ashnode
+
+memory = Ashnode(db_path=<span class="tok-str">"legal-memory.db"</span>)
+
+<span class="tok-comment"># March 2025 — original MSA</span>
+memory.ingest(
+    <span class="tok-str">"MSA-7 contract value is $2.5M. Governing law: Delaware."</span>,
+    source=<span class="tok-str">"contracts/msa-7-original.pdf"</span>,
+    claim_key=<span class="tok-str">"contract.MSA-7.value"</span>,
+)
+memory.ingest(
+    <span class="tok-str">"MSA-7 governing law is Delaware."</span>,
+    source=<span class="tok-str">"contracts/msa-7-original.pdf"</span>,
+    claim_key=<span class="tok-str">"contract.MSA-7.governing_law"</span>,
+)
+
+<span class="tok-comment"># July 2025 — amendment supersedes value</span>
+memory.ingest(
+    <span class="tok-str">"MSA-7 contract value revised to $3.2M per Amendment 1."</span>,
+    source=<span class="tok-str">"contracts/msa-7-amendment-1.pdf"</span>,
+    claim_key=<span class="tok-str">"contract.MSA-7.value"</span>,  <span class="tok-comment"># same key — auto-supersedes the original</span>
+)
+
+<span class="tok-comment"># November 2025 — governing law change</span>
+memory.ingest(
+    <span class="tok-str">"MSA-7 governing law changed to California via side letter dated Nov 2025."</span>,
+    source=<span class="tok-str">"contracts/msa-7-side-letter-nov25.pdf"</span>,
+    claim_key=<span class="tok-str">"contract.MSA-7.governing_law"</span>,  <span class="tok-comment"># supersedes Delaware</span>
+)
+
+<span class="tok-comment"># January 2026 — litigation hold</span>
+memory.ingest(
+    <span class="tok-str">"Litigation hold placed on all MSA-7 documents effective Jan 2026."</span>,
+    source=<span class="tok-str">"legal/litigation-hold-jan26.pdf"</span>,
+    claim_key=<span class="tok-str">"contract.MSA-7.litigation_hold"</span>,
+)</code></pre>
+
+    <p>
+      The <code>claim_key</code> parameter is the key design decision. When two claims share the same key, the newer one automatically supersedes the older one. The old version is preserved in the store for audit purposes but hidden from default recall. No manual ID tracking. No delete operations.
+    </p>
+
+    <h3>Recall</h3>
+
+<pre><code>packet = memory.recall(<span class="tok-str">"MSA-7 current terms, governing law, and any active holds"</span>)
+
+<span class="tok-comment"># What the agent receives:</span>
+<span class="tok-kw">for</span> item <span class="tok-kw">in</span> packet.items:
+    fi = packet.freshness[item.item_id]
+    print(<span class="tok-str">f"[{item.source}] {item.content}"</span>)
+    print(<span class="tok-str">f"  age={fi.age_seconds/86400:.0f} days  superseded={fi.is_superseded}"</span>)
+
+<span class="tok-comment"># Check for any surfaced contradictions</span>
+<span class="tok-kw">if</span> packet.contradictions:
+    print(<span class="tok-str">"Contradictions detected — review before proceeding"</span>)
+
+<span class="tok-comment"># Always know if context was capped</span>
+<span class="tok-kw">if</span> packet.completeness.any_truncated():
+    print(<span class="tok-str">"Context was capped by policy — consider raising k"</span>)</code></pre>
+
+    <p>
+      The agent receives exactly three items: the current contract value ($3.2M), the current governing law (California), and the active litigation hold. The $2.5M original and the Delaware governing law record are in the store — available for audit — but not returned by default recall. The LLM cannot see them unless you explicitly request superseded history.
+    </p>
+
+    <div class="callout good">
+      <div class="callout-label">The result</div>
+      <p>
+        The agent produces a correct, unambiguous answer: MSA-7 is currently valued at $3.2M, governed by California law, with an active litigation hold from January 2026. Zero contradictions passed to the LLM. Full audit trail available if needed.
+      </p>
+    </div>
+
+    <h3>Audit query — when you need the history</h3>
+
+<pre><code><span class="tok-kw">from</span> ashnode.models <span class="tok-kw">import</span> Policy
+<span class="tok-kw">from</span> ashnode <span class="tok-kw">import</span> register_policy
+
+audit_policy = Policy(
+    policy_version=<span class="tok-str">"audit-v1"</span>,
+    k=<span class="tok-num">50</span>,
+    include_superseded=<span class="tok-kw">True</span>,  <span class="tok-comment"># show the full history</span>
+)
+register_policy(audit_policy)
+
+history = memory.recall(
+    <span class="tok-str">"MSA-7 full contract history"</span>,
+    policy_version=<span class="tok-str">"audit-v1"</span>,
+)
+<span class="tok-comment"># Returns all versions — original, amendment, side letter — with provenance</span></code></pre>
+
+    <p>
+      The same store serves both queries. Default recall returns only current state. Audit recall returns the full chain. The policy controls which view you get — and the policy version is stamped on every packet so you always know which view produced which output.
+    </p>
+
+    <h2>What's in every context packet</h2>
+
+    <table class="packet-table">
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>What it gives your agent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>items</td>
+          <td>Top-k claims, semantically ranked and freshness-weighted. Superseded versions excluded by default.</td>
+        </tr>
+        <tr>
+          <td>contradictions</td>
+          <td>Detected tensions between retrieved items, keyed by item_id. Flagged before they reach the LLM.</td>
+        </tr>
+        <tr>
+          <td>freshness</td>
+          <td>Per-item: age in seconds, decay factor (e^−age/tau), supersession status, and the item that superseded it.</td>
+        </tr>
+        <tr>
+          <td>completeness</td>
+          <td>Explicit flags for each cap: items_truncated, contradictions_truncated. No silent gaps.</td>
+        </tr>
+        <tr>
+          <td>store_revision</td>
+          <td>Monotonic write counter. Same revision + same query + same policy = identical packet. Enables replay.</td>
+        </tr>
+        <tr>
+          <td>policy_version</td>
+          <td>Pins which policy produced this packet. Every decision is auditable to its exact retrieval configuration.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Performance</h2>
+
+    <p>
+      Ashnode is designed to run in production without infrastructure overhead:
+    </p>
+
+    <ul>
+      <li><strong>p95 recall latency: &lt;2ms</strong> at 50,000 items</li>
+      <li><strong>Sublinear scaling:</strong> 0.14x latency growth for a 100x corpus increase (HNSW O(log N))</li>
+      <li><strong>Determinism:</strong> zero failures across all test runs — same inputs, same packet</li>
+      <li><strong>Contradiction detection:</strong> async in background brain, never adds to ingest latency</li>
+      <li><strong>CPU-only:</strong> no GPU required, no cloud dependency for the default configuration</li>
+    </ul>
+
+    <h2>Who should use this</h2>
+
+    <p>
+      Ashnode is the right layer if your agent meets any of these conditions:
+    </p>
+
+    <ul>
+      <li>It runs for more than one session — facts it holds can change between runs</li>
+      <li>It operates in a domain where a wrong answer has a real cost (legal, healthcare, compliance, finance)</li>
+      <li>You need to be able to audit or replay what the agent knew when it made a decision</li>
+      <li>You're already using a vector store but have no mechanism for supersession or contradiction detection</li>
+    </ul>
+
+    <p>
+      If your agent is stateless — each conversation starts fresh with no persistent memory — you don't need this. Ashnode is infrastructure for agents that accumulate knowledge over time and need that knowledge to stay correct.
+    </p>
+
+    <h2>Getting started</h2>
+
+<pre><code>pip install git+https://github.com/itachi-hue/ashnode.git</code></pre>
+
+<pre><code><span class="tok-kw">from</span> ashnode <span class="tok-kw">import</span> Ashnode
+
+memory = Ashnode(db_path=<span class="tok-str">"agent.db"</span>)
+
+memory.ingest(<span class="tok-str">"Your first claim."</span>, source=<span class="tok-str">"your-source"</span>)
+packet = memory.recall(<span class="tok-str">"your query"</span>)
+
+<span class="tok-kw">for</span> item <span class="tok-kw">in</span> packet.items:
+    print(item.content)
+    print(packet.freshness[item.item_id])</code></pre>
+
+    <p>
+      That's the full integration. NLI contradiction detection runs automatically in the background. SQLite persists everything across restarts. No configuration required to get started.
+    </p>
+
+    <hr />
+
+    <div class="article-cta">
+      <h3>Try Ashnode with your agent</h3>
+      <p>Early access is available to teams building long-lived agents in production. Full technical documentation and benchmark results shared after access is granted.</p>
+      <a href="/#access" class="cta-btn">Request Access &rarr;</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 Ashnode. All rights reserved. &nbsp;&middot;&nbsp; <a href="/">Home</a> &nbsp;&middot;&nbsp; Provisional patent filed March 25, 2026.</p>
+</footer>
+
+</body>
+</html>
