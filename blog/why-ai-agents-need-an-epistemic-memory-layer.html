@@ -456,7 +456,7 @@
     </ul>
 
     <p>
-      This is Ashnode. It runs locally, CPU-only, with sub-2ms p95 recall at 50,000 items. No external dependencies. No API keys required for the default setup.
+      This is Ashnode. It runs locally, CPU-only, with ~3ms p95 recall latency. No external dependencies. No API keys required for the default setup.
     </p>
 
     <h2>How Ashnode works</h2>
@@ -472,7 +472,7 @@
 
     <h3>1. The store and index</h3>
     <p>
-      Claims are stored in SQLite (WAL mode, durable across restarts) and indexed in an HNSW graph for approximate nearest-neighbour search. HNSW gives O(log N) query time — latency grows at 0.14x for a 100x corpus increase. At 50K items, p95 recall is under 2ms.
+      Claims are stored in SQLite (WAL mode, durable across restarts) and indexed in an HNSW graph for approximate nearest-neighbour search. HNSW gives O(log N) query time — latency grows at 0.12x for a 100x corpus increase, keeping p95 recall around 3ms in production.
     </p>
 
     <h3>2. The background brain</h3>
@@ -633,8 +633,8 @@ history = memory.recall(
     </p>
 
     <ul>
-      <li><strong>p95 recall latency: &lt;2ms</strong> at 50,000 items</li>
-      <li><strong>Sublinear scaling:</strong> 0.14x latency growth for a 100x corpus increase (HNSW O(log N))</li>
+      <li><strong>p95 recall latency: ~3ms</strong> (O(log N) scaling with corpus size)</li>
+      <li><strong>Sublinear scaling:</strong> 0.12x latency growth for a 100x corpus increase (HNSW)</li>
       <li><strong>Determinism:</strong> zero failures across all test runs — same inputs, same packet</li>
       <li><strong>Contradiction detection:</strong> async in background brain, never adds to ingest latency</li>
       <li><strong>CPU-only:</strong> no GPU required, no cloud dependency for the default configuration</li>
