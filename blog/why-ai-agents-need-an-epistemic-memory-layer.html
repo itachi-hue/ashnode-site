@@ -150,7 +150,7 @@
     }
 
     .article-body p {
-      color: #a1a1aa;
+      color: #c8c8d2;
       margin-bottom: 1.2rem;
     }
 
@@ -158,7 +158,7 @@
 
     .article-body ul, .article-body ol {
       margin: 0.5rem 0 1.2rem 1.5rem;
-      color: #a1a1aa;
+      color: #c8c8d2;
     }
 
     .article-body li { margin-bottom: 0.4rem; }
@@ -452,6 +452,10 @@
     </p>
 
     <h3>Ingestion</h3>
+
+    <p>
+      Each fact is stored with a <code>claim_key</code> — a stable, human-readable identifier for that specific claim (e.g. <code>"contract.MSA-7.governing_law"</code>). When a newer version of the same fact arrives, Ashnode automatically supersedes the old one. Your agent always gets the current truth, never the full revision history unless you explicitly ask for it.
+    </p>
 
 <pre><code><span class="tok-kw">from</span> ashnode <span class="tok-kw">import</span> Ashnode
 
