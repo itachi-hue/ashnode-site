@@ -16,7 +16,7 @@
       --accent: #7c6af7;
       --accent-dim: #4f46a3;
       --text: #e4e4e7;
-      --muted: #71717a;
+      --muted: #9a9aa8;
       --green: #22c55e;
       --red: #ef4444;
       --yellow: #eab308;
@@ -82,6 +82,25 @@
       transition: opacity 0.2s;
     }
     .nav-cta:hover { opacity: 0.85; text-decoration: none !important; }
+
+    /* HAMBURGER */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
 
     /* ARTICLE LAYOUT */
     .article-wrap {
@@ -314,8 +333,23 @@
       border-top: 1px solid var(--border);
     }
 
-    @media (max-width: 640px) {
-      .nav-links { display: none; }
+    @media (max-width: 680px) {
+      .nav-toggle { display: flex; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 60px; left: 0; right: 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        gap: 0;
+        padding: 1rem 0;
+        align-items: stretch;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { text-align: center; }
+      .nav-links a { display: block; padding: 0.75rem 2rem; font-size: 1rem; }
+      .nav-cta { margin: 0.5rem 2rem; text-align: center; border-radius: 8px; }
       .article-wrap { padding: 80px 1.25rem 60px; }
     }
   </style>
@@ -324,9 +358,15 @@
 
 <nav>
   <a class="nav-logo" href="/">Ash<span>node</span></a>
-  <ul class="nav-links">
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/#why-now">Why Now</a></li>
+    <li><a href="/#problem">vs RAG</a></li>
     <li><a href="/#features">Features</a></li>
-    <li><a href="/#use-cases">Use Cases</a></li>
+    <li><a href="/#code">Quick Start</a></li>
+    <li><a href="/blog/why-ai-agents-need-an-epistemic-memory-layer.html">Blog</a></li>
     <li><a href="/#access" class="nav-cta">Request Access</a></li>
   </ul>
 </nav>
@@ -650,6 +690,19 @@ packet = memory.recall(<span class="tok-str">"your query"</span>)
 <footer>
   <p>&copy; 2026 Ashnode. All rights reserved. &nbsp;&middot;&nbsp; <a href="/">Home</a> &nbsp;&middot;&nbsp; Provisional patent filed March 25, 2026.</p>
 </footer>
+
+<script>
+  var toggle = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  if (toggle && links) {
+    toggle.addEventListener('click', function() {
+      links.classList.toggle('open');
+    });
+    links.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() { links.classList.remove('open'); });
+    });
+  }
+</script>
 
 </body>
 </html>
