@@ -308,11 +308,109 @@
     .hero-pain strong { color: var(--text); }
 
     .hero-sub {
-      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-size: clamp(1rem, 2vw, 1.1rem);
       color: var(--muted);
       max-width: 580px;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.25rem;
       line-height: 1.75;
+    }
+
+    .hero-quote {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2rem;
+      padding: 0.75rem 1.1rem;
+      border-left: 3px solid var(--accent);
+      background: rgba(105,85,232,0.05);
+      border-radius: 0 8px 8px 0;
+      line-height: 1.5;
+    }
+
+    /* FLOW DIAGRAM SECTION */
+    .flow-section {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 2rem;
+      background: #ffffff;
+    }
+
+    .flow-section .section-label { text-align: center; margin-bottom: 2rem; }
+
+    .flow-chain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .flow-step {
+      text-align: center;
+      padding: 1rem 1.25rem;
+      min-width: 130px;
+      flex-shrink: 0;
+    }
+
+    .flow-step-role {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .flow-step-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .flow-step-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+      line-height: 1.4;
+    }
+
+    .flow-step.is-ashnode {
+      background: rgba(105,85,232,0.05);
+      border: 1.5px solid rgba(105,85,232,0.25);
+      border-radius: 10px;
+      padding: 1rem 1.4rem;
+      box-shadow: 0 0 0 3px rgba(105,85,232,0.06);
+    }
+
+    .flow-step.is-ashnode .flow-step-role { color: var(--accent); }
+    .flow-step.is-ashnode .flow-step-name { color: var(--accent); font-size: 1rem; }
+
+    .flow-arrow {
+      font-size: 1.1rem;
+      color: var(--border);
+      padding: 0 0.5rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .flow-punchline {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .flow-punchline strong { color: var(--text); }
+
+    @media (max-width: 700px) {
+      .flow-chain { flex-direction: column; align-items: center; gap: 0.25rem; }
+      .flow-arrow { transform: rotate(90deg); }
     }
 
     .hero-actions {
@@ -811,8 +909,8 @@
       <h1>The memory infrastructure<br />for <em>agents you can trust</em></h1>
       <p class="hero-sub">
         Ashnode sits between your vector store and your LLM — the layer plain RAG is missing.
-        Current facts only, conflict detection, full provenance, and reproducible recall — as a single API call.
       </p>
+      <p class="hero-quote">RAG retrieves documents. Ashnode returns what is true.</p>
       <div class="hero-actions">
         <a href="#access" class="btn-primary">Request Early Access</a>
         <a href="#problem" class="btn-secondary">See How It Works</a>
@@ -925,6 +1023,83 @@
       </div>
     </div>
   </div>
+</section>
+
+<!-- HOW IT FITS -->
+<section class="flow-section">
+  <div class="section-label">The Consequence Chain</div>
+  <div class="flow-chain">
+
+    <div class="flow-step">
+      <div class="flow-step-role">Your agent</div>
+      <div class="flow-step-name">Needs to act</div>
+      <div class="flow-step-sub">on evolving facts</div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-step">
+      <div class="flow-step-role">Queries memory</div>
+      <div class="flow-step-name">Plain RAG</div>
+      <div class="flow-step-sub">all versions returned<br />no current signal</div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-step">
+      <div class="flow-step-role">LLM receives</div>
+      <div class="flow-step-name">Contradictory facts</div>
+      <div class="flow-step-sub">stale · unverified<br />no audit trail</div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-step">
+      <div class="flow-step-role">Outcome</div>
+      <div class="flow-step-name">Wrong decision</div>
+      <div class="flow-step-sub">liability · debugging<br />no reproducibility</div>
+    </div>
+
+  </div>
+
+  <div class="flow-chain" style="margin-top: 2rem;">
+
+    <div class="flow-step">
+      <div class="flow-step-role">Your agent</div>
+      <div class="flow-step-name">Needs to act</div>
+      <div class="flow-step-sub">on evolving facts</div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-step is-ashnode">
+      <div class="flow-step-role">Memory Layer</div>
+      <div class="flow-step-name">Ashnode</div>
+      <div class="flow-step-sub">current · verified<br />auditable</div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-step">
+      <div class="flow-step-role">LLM receives</div>
+      <div class="flow-step-name">Verified context</div>
+      <div class="flow-step-sub">current only · conflicts<br />flagged · provenance</div>
+    </div>
+
+    <div class="flow-arrow">→</div>
+
+    <div class="flow-step">
+      <div class="flow-step-role">Outcome</div>
+      <div class="flow-step-name">Correct decision</div>
+      <div class="flow-step-sub">reproducible · auditable<br />defensible</div>
+    </div>
+
+  </div>
+
+  <p class="flow-punchline">
+    <strong>RAG retrieves documents. Ashnode returns what is true.</strong><br />
+    The difference is every wrong answer your agent has ever given.
+  </p>
 </section>
 
 <!-- PROBLEM -->
