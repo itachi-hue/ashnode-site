@@ -500,79 +500,8 @@
       border-color: rgba(124,106,247,0.2);
     }
 
-    .feature-icon { font-size: 1.4rem; margin-bottom: 0.9rem; }
-    .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.45rem; }
-    .feature-desc { font-size: 0.855rem; color: var(--muted); line-height: 1.6; }
-
-    /* CODE */
-    .code-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-    .code-intro { text-align: center; margin-bottom: 3rem; }
-    .code-intro .section-sub { margin: 0 auto; }
-
-    .code-compare {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      align-items: stretch;
-    }
-
-    @media (max-width: 720px) { .code-compare { grid-template-columns: 1fr; } }
-
-    .code-panel { display: flex; flex-direction: column; }
-
-    .code-panel-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-    }
-
-    .code-panel-header .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .code-panel.bad-panel .dot { background: var(--red); }
-    .code-panel.bad-panel .code-panel-header { color: var(--red); }
-    .code-panel.good-panel .dot { background: var(--green); }
-    .code-panel.good-panel .code-panel-header { color: var(--green); }
-
-    pre {
-      background: #0d0d10;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.4rem;
-      overflow-x: auto;
-      font-size: 0.8rem;
-      line-height: 1.75;
-      font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
-      flex: 1;
-      min-height: 340px;
-    }
-
-    .code-panel.bad-panel pre { border-color: rgba(239,68,68,0.2); }
-    .code-panel.good-panel pre { border-color: rgba(34,197,94,0.2); }
-
-    .kw { color: #7c6af7; }
-    .fn { color: #60a5fa; }
-    .st { color: #86efac; }
-    .cm { color: #52525b; }
-    .nm { color: #fbbf24; }
-    .err { color: #f87171; }
-    .ok { color: #86efac; }
-
-    .code-outcome {
-      margin-top: 0.75rem;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      line-height: 1.5;
-    }
-
-    .code-outcome.bad { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: var(--red); }
-    .code-outcome.good { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: var(--green); }
+    .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-desc { font-size: 0.855rem; color: var(--muted); line-height: 1.65; }
 
     /* USE CASES */
     .usecases {
@@ -807,7 +736,6 @@
     <li><a href="#why-now">Why Now</a></li>
     <li><a href="#problem">vs RAG</a></li>
     <li><a href="#features">Features</a></li>
-    <li><a href="#code">Quick Start</a></li>
     <li><a href="/blog/why-ai-agents-need-an-epistemic-memory-layer/">Blog</a></li>
     <li><a href="#access" class="nav-cta">Request Access</a></li>
   </ul>
@@ -988,111 +916,47 @@
     </p>
     <div class="features-top">
       <div class="feature-card primary">
-        <div class="feature-icon">🔁</div>
-        <div class="feature-title">Supersession</div>
+        <div class="feature-title">Facts Stay Current</div>
         <div class="feature-desc">
-          When a fact is updated, the old version is marked superseded automatically via <code>claim_key</code>. Recall returns only the current version. Trend queries can optionally include the full chain — with timestamps and decay scores intact.
+          New fact on the same topic? The old version is automatically retired. Your agent only sees what is true right now — with the full history available for audit if you need it.
         </div>
       </div>
       <div class="feature-card primary">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">Contradiction Detection</div>
+        <div class="feature-title">Conflicts Caught Before the LLM</div>
         <div class="feature-desc">
-          A background brain continuously scans for conflicting facts within each retrieval neighborhood — using both heuristic and NLI-based methods. Contradictions are surfaced in the context packet, not silently passed to the LLM.
+          A background process continuously scans for facts that disagree. When conflicts exist, they are attached to the response — never silently passed to the model.
         </div>
       </div>
       <div class="feature-card primary">
-        <div class="feature-icon">📋</div>
-        <div class="feature-title">Full Provenance</div>
+        <div class="feature-title">Every Decision Auditable</div>
         <div class="feature-desc">
-          Every item in every context packet carries its source, timestamp, decay score, supersession status, and write sequence number. Every agent decision is fully auditable. You can reproduce exactly what the agent knew at any point in time.
+          Source, timestamp, freshness score, and replacement status on every fact, every time. Know exactly what your agent knew when it made a decision — and reproduce it on demand.
         </div>
       </div>
     </div>
     <div class="features-bottom">
       <div class="feature-card">
-        <div class="feature-icon">⏱️</div>
-        <div class="feature-title">Time Decay</div>
+        <div class="feature-title">Facts Age Naturally</div>
         <div class="feature-desc">
-          Configurable half-life (tau) per item. Facts age naturally — a recent update outweighs an old one without manual curation. Freshness is a first-class signal in every recall.
+          Set a half-life per fact. Recent updates outweigh older ones automatically. No manual curation. Freshness is a first-class signal in every recall.
         </div>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <div class="feature-title">Deterministic Recall</div>
+        <div class="feature-title">Same Question, Same Answer</div>
         <div class="feature-desc">
-          Same query + policy + store revision = identical context packet. Always. Zero non-determinism failures across all benchmark runs. Agent decisions are reproducible and defensible.
+          Same query, same policy, same data snapshot = identical response. Always. Zero non-determinism across all benchmark runs. Decisions are reproducible and defensible.
         </div>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">📦</div>
-        <div class="feature-title">Bounded Context Packets</div>
+        <div class="feature-title">No Silent Gaps</div>
         <div class="feature-desc">
-          Policy-controlled caps on items, contradictions, beliefs, and edges. Agents receive a principled, bounded slice — never everything. An explicit flag is set when a cap is hit so agents know the context is complete.
+          Hard caps on what recall returns, defined by policy. When a cap is hit, an explicit flag is set. Your agent always knows if its context was limited — no guessing.
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CODE -->
-<section id="code" class="code-section">
-  <div class="container">
-    <div class="code-intro">
-      <div class="section-label">Before &amp; After</div>
-      <h2>The same question. Two very different answers.</h2>
-      <p class="section-sub">
-        RAG retrieves what is semantically similar. Ashnode returns what is currently true.
-        Here's what that difference looks like in a real agent workflow.
-      </p>
-    </div>
-    <div class="code-compare">
-      <div class="code-panel bad-panel">
-        <div class="code-panel-header"><span class="dot"></span>Without Ashnode — Plain RAG</div>
-        <pre><code><span class="cm"># RAG returns all versions equally</span>
-results = vector_db.<span class="fn">search</span>(
-    <span class="st">"patient BP"</span>, top_k=<span class="nm">5</span>
-)
-
-<span class="cm"># Agent receives all 3 — no ordering:</span>
-<span class="cm">#  "Patient BP is 102 mmHg"</span>
-<span class="cm">#  "Patient BP is 104 mmHg"</span>
-<span class="cm">#  "Patient BP is 110 mmHg"</span>
-<span class="cm"># No timestamps. No supersession.</span>
-<span class="cm"># No way to know which is current.</span>
-
-agent_answer = llm.<span class="fn">complete</span>(results)
-<span class="cm"># LLM guesses. Sometimes wrong.</span>
-<span class="cm"># No audit trail. Impossible to debug.</span>
-<span class="err"># Agent answer: non-deterministic.</span>
-</code></pre>
-        <div class="code-outcome bad">Agent receives 3 versions of the same fact with no way to determine which is current. LLM hallucinates a synthesis.</div>
-      </div>
-      <div class="code-panel good-panel">
-        <div class="code-panel-header"><span class="dot"></span>With Ashnode</div>
-        <pre><code><span class="cm"># Ashnode tracks supersession automatically</span>
-memory.<span class="fn">ingest</span>(content=<span class="st">"BP is 102"</span>, claim_key=<span class="st">"bp"</span>)
-memory.<span class="fn">ingest</span>(content=<span class="st">"BP is 104"</span>, claim_key=<span class="st">"bp"</span>)
-memory.<span class="fn">ingest</span>(content=<span class="st">"BP is 110"</span>, claim_key=<span class="st">"bp"</span>)
-
-packet = memory.<span class="fn">recall</span>(<span class="st">"patient BP"</span>)
-
-<span class="cm"># packet.items → ["BP is 110 mmHg"] only</span>
-<span class="cm">#   .timestamp  → 2026-03-25T09:14:00Z</span>
-<span class="cm">#   .freshness  → 0.97</span>
-<span class="cm">#   .superseded → False</span>
-<span class="cm"># packet.contradictions → []</span>
-
-agent_answer = llm.<span class="fn">complete</span>(packet)
-<span class="ok"># Agent answers from current truth only.</span>
-<span class="ok"># Full audit trail. Fully reproducible.</span>
-<span class="ok"># Agent answer: deterministic.</span>
-</code></pre>
-        <div class="code-outcome good">Agent receives exactly one current fact with timestamp, freshness score, and provenance. Answer is correct and auditable.</div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- USE CASES -->
 <section id="usecases">
