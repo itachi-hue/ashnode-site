@@ -238,24 +238,72 @@
 
     .article-body li { margin-bottom: 0.4rem; }
 
-    /* DIAGRAM */
-    .diagram {
-      margin: 2.5rem 0;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
+    /* BLOG DIAGRAMS */
+    .blog-diagram {
+      margin: 2.5rem auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 520px;
     }
-    .diagram img {
+
+    .bd-node {
       width: 100%;
-      display: block;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
-    .diagram-caption {
-      background: var(--surface);
-      padding: 0.75rem 1rem;
+
+    .bd-ashnode {
+      background: rgba(105,85,232,0.04);
+      border-color: rgba(105,85,232,0.3);
+      box-shadow: 0 0 0 3px rgba(105,85,232,0.07), 0 4px 20px rgba(105,85,232,0.1);
+    }
+
+    .bd-label { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+    .bd-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.5; }
+    .bd-eyebrow {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem;
+    }
+
+    .bd-arrow {
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding: 0.55rem 1rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .bd-arrow-warn { color: var(--red); }
+
+    .bd-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: center;
+      margin: 0.6rem 0 0.3rem;
+    }
+
+    .bd-pill {
+      font-size: 0.7rem;
+      padding: 0.22rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(105,85,232,0.07);
+      border: 1px solid rgba(105,85,232,0.18);
+      color: var(--text);
+    }
+
+    .bd-caption {
+      margin-top: 1rem;
       font-size: 0.8rem;
       color: var(--muted);
       text-align: center;
-      border-top: 1px solid var(--border);
+      font-style: italic;
+      line-height: 1.5;
     }
 
     /* CODE BLOCKS */
@@ -589,9 +637,22 @@
       These aren't missing features you can prompt-engineer around. They're <strong>structural properties of the retrieval architecture.</strong> You cannot fix a supersession problem with a better system prompt.
     </p>
 
-    <div class="diagram">
-      <img src="../../assets/blog-rag-problem.png" alt="The RAG problem for legal agents" />
-      <div class="diagram-caption">Plain RAG returns all versions of a fact equally — no concept of current, no contradiction signal, no audit trail.</div>
+    <div class="blog-diagram">
+      <div class="bd-node">
+        <div class="bd-label">Your Documents</div>
+        <div class="bd-sub">v1 · v2 · v3 — all versions, all timestamps</div>
+      </div>
+      <div class="bd-arrow">↓ embed everything equally</div>
+      <div class="bd-node">
+        <div class="bd-label">Vector Store</div>
+        <div class="bd-sub">no concept of current · no supersession · similarity rank only</div>
+      </div>
+      <div class="bd-arrow bd-arrow-warn">↓ returns all versions ranked by similarity — no conflict signal</div>
+      <div class="bd-node">
+        <div class="bd-label">LLM / Agent</div>
+        <div class="bd-sub">receives contradictory facts · cannot determine what is current · no audit trail</div>
+      </div>
+      <div class="bd-caption">Plain RAG returns all versions of a fact equally — no concept of current, no contradiction signal, no audit trail.</div>
     </div>
 
     <h2>What an epistemic memory layer does differently</h2>
@@ -616,9 +677,28 @@
 
     <h2>How Ashnode works</h2>
 
-    <div class="diagram">
-      <img src="../../assets/blog-ashnode-architecture.png" alt="Ashnode architecture diagram" />
-      <div class="diagram-caption">Ashnode sits between your data pipeline and your LLM. Ingest claims in, get bounded context packets out.</div>
+    <div class="blog-diagram">
+      <div class="bd-node">
+        <div class="bd-label">Your Data Pipeline</div>
+        <div class="bd-sub">ingest(claim, source, claim_key)</div>
+      </div>
+      <div class="bd-arrow">↓</div>
+      <div class="bd-node bd-ashnode">
+        <div class="bd-eyebrow">Memory Layer</div>
+        <div class="bd-label">ASHNODE</div>
+        <div class="bd-pills">
+          <span class="bd-pill">SQLite store</span>
+          <span class="bd-pill">HNSW index</span>
+          <span class="bd-pill">Background brain</span>
+        </div>
+        <div class="bd-sub">supersession · contradiction detection · freshness decay</div>
+      </div>
+      <div class="bd-arrow">↓ recall(query, policy) → ContextPacket</div>
+      <div class="bd-node">
+        <div class="bd-label">LLM / Agent</div>
+        <div class="bd-sub">current facts only · contradictions flagged · full provenance · deterministic</div>
+      </div>
+      <div class="bd-caption">Ashnode sits between your data pipeline and your LLM. Ingest claims in, get bounded context packets out.</div>
     </div>
 
     <p>
