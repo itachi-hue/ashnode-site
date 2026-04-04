@@ -185,17 +185,41 @@
     .hero {
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 8rem 1.5rem 5rem;
+      padding: 6rem 2rem 4rem;
       position: relative;
       overflow: hidden;
       background:
         radial-gradient(ellipse 860px 520px at 50% -60px, rgba(105,85,232,0.11) 0%, transparent 70%),
         linear-gradient(180deg, #eeecf8 0%, #f5f4fb 28%, #faf9fd 52%, #ffffff 72%);
       border-bottom: 1px solid var(--border);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      max-width: 1140px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-left { text-align: left; }
+
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 880px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-left { text-align: center; }
+      .hero-actions { justify-content: center; }
+      .stats { justify-content: center; }
     }
 
     .hero::before {
@@ -213,8 +237,8 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      background: rgba(124,106,247,0.1);
-      border: 1px solid rgba(124,106,247,0.3);
+      background: rgba(105,85,232,0.08);
+      border: 1px solid rgba(105,85,232,0.25);
       color: var(--accent);
       font-size: 0.78rem;
       font-weight: 600;
@@ -222,7 +246,7 @@
       text-transform: uppercase;
       padding: 0.35rem 0.9rem;
       border-radius: 999px;
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
     }
 
     .badge-dot {
@@ -327,14 +351,13 @@
     /* STATS */
     .stats {
       display: flex;
-      justify-content: center;
-      gap: 3rem;
+      justify-content: flex-start;
+      gap: 2rem;
       flex-wrap: wrap;
-      margin-top: 4rem;
-      padding-top: 3rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
       border-top: 1px solid var(--border);
       width: 100%;
-      max-width: 860px;
     }
 
     .stat { text-align: center; }
@@ -603,8 +626,9 @@
 
     /* ARCHITECTURE DIAGRAM */
     .arch-diagram {
-      max-width: 460px;
-      margin: 3rem auto 0;
+      max-width: 400px;
+      width: 100%;
+      margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -744,79 +768,76 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="badge"><span class="badge-dot"></span>Private Beta</div>
+  <div class="hero-inner">
 
-  <h1>The memory infrastructure<br />for <em>agents you can trust</em></h1>
-
-  <div class="hero-pain">
-    <div class="hero-pain-label">What happens without it</div>
-    <p>A voice agent quotes a <strong>drug dosage updated 3 weeks prior</strong>. A legal agent cites a <strong>contract value that was amended</strong>. A clinical copilot surfaces <strong>an allergy note and its contradicting prescription — both</strong>. Your RAG retrieved correctly. Your agent answered wrong. And you have no audit trail to explain why.</p>
-  </div>
-
-  <p class="hero-sub">
-    Ashnode sits between your vector store and your LLM — the layer plain RAG is missing.
-    It gives agents <strong style="color:var(--text)">current facts only</strong> (old versions automatically retired),
-    <strong style="color:var(--text)">conflict detection</strong> (contradictions surfaced before the LLM sees them),
-    <strong style="color:var(--text)">full provenance</strong> (every decision auditable),
-    and <strong style="color:var(--text)">reproducible recall</strong> (same query, same answer, every time).
-  </p>
-
-  <div class="hero-actions">
-    <a href="#access" class="btn-primary">Request Early Access</a>
-    <a href="#problem" class="btn-secondary">See How It Works</a>
-  </div>
-
-  <div class="stats">
-    <div class="stat">
-      <div class="stat-value">~3ms</div>
-      <div class="stat-label">p95 recall latency</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">14 / 14</div>
-      <div class="stat-label">benchmark sections passing</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">0</div>
-      <div class="stat-label">determinism failures across all runs</div>
-    </div>
-    <div class="stat">
-      <div class="stat-value">0 vs 3</div>
-      <div class="stat-label">agent errors vs plain RAG, head-to-head</div>
-    </div>
-  </div>
-
-  <!-- PRODUCT DIAGRAM -->
-  <div class="arch-diagram">
-    <div class="arch-node arch-top">
-      <div class="arch-label-sm">Your LLM &amp; Agent</div>
-      <div class="arch-label-sub">GPT-4 · Claude · Gemini · any model</div>
-    </div>
-    <div class="arch-connector">
-      <div class="arch-conn-line"></div>
-      <div class="arch-conn-tag">clean · current · auditable context</div>
-      <div class="arch-conn-arrow">↑↓</div>
-    </div>
-    <div class="arch-node arch-middle">
-      <div class="arch-eyebrow">Memory Layer</div>
-      <div class="arch-wordmark">ASHNODE</div>
-      <div class="arch-pills">
-        <span>✓ Current facts only</span>
-        <span>✓ Conflicts surfaced</span>
-        <span>✓ Full provenance</span>
-        <span>✓ Reproducible</span>
+    <div class="hero-left">
+      <div class="badge"><span class="badge-dot"></span>Private Beta</div>
+      <h1>The memory infrastructure<br />for <em>agents you can trust</em></h1>
+      <p class="hero-sub">
+        Ashnode sits between your vector store and your LLM — the layer plain RAG is missing.
+        It gives agents <strong>current facts only</strong> (old versions automatically retired),
+        <strong>conflict detection</strong> (contradictions surfaced before the LLM sees them),
+        <strong>full provenance</strong> (every decision auditable),
+        and <strong>reproducible recall</strong> (same query, same answer, every time).
+      </p>
+      <div class="hero-actions">
+        <a href="#access" class="btn-primary">Request Early Access</a>
+        <a href="#problem" class="btn-secondary">See How It Works</a>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">~3ms</div>
+          <div class="stat-label">p95 recall latency</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">14 / 14</div>
+          <div class="stat-label">benchmark sections passing</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">0</div>
+          <div class="stat-label">determinism failures</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">0 vs 3</div>
+          <div class="stat-label">errors vs plain RAG</div>
+        </div>
       </div>
     </div>
-    <div class="arch-connector">
-      <div class="arch-conn-line"></div>
-      <div class="arch-conn-tag">raw vectors &amp; documents</div>
-      <div class="arch-conn-arrow">↑↓</div>
-    </div>
-    <div class="arch-node arch-bottom">
-      <div class="arch-label-sm">Your Vector Store</div>
-      <div class="arch-label-sub">Pinecone · Weaviate · pgvector · Qdrant · any</div>
-    </div>
-  </div>
 
+    <div class="hero-right">
+      <div class="arch-diagram">
+        <div class="arch-node arch-top">
+          <div class="arch-label-sm">Your LLM &amp; Agent</div>
+          <div class="arch-label-sub">GPT-4 · Claude · Gemini · any model</div>
+        </div>
+        <div class="arch-connector">
+          <div class="arch-conn-line"></div>
+          <div class="arch-conn-tag">clean · current · auditable context</div>
+          <div class="arch-conn-arrow">↑↓</div>
+        </div>
+        <div class="arch-node arch-middle">
+          <div class="arch-eyebrow">Memory Layer</div>
+          <div class="arch-wordmark">ASHNODE</div>
+          <div class="arch-pills">
+            <span>✓ Current facts only</span>
+            <span>✓ Conflicts surfaced</span>
+            <span>✓ Full provenance</span>
+            <span>✓ Reproducible</span>
+          </div>
+        </div>
+        <div class="arch-connector">
+          <div class="arch-conn-line"></div>
+          <div class="arch-conn-tag">raw vectors &amp; documents</div>
+          <div class="arch-conn-arrow">↑↓</div>
+        </div>
+        <div class="arch-node arch-bottom">
+          <div class="arch-label-sm">Your Vector Store</div>
+          <div class="arch-label-sub">Pinecone · Weaviate · pgvector · Qdrant · any</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
 
 <!-- WHY NOW -->
@@ -881,6 +902,10 @@
       current, what has been superseded, or whether two retrieved facts
       contradict each other. That gap is where agents fail.
     </p>
+    <div class="hero-pain" style="margin-bottom: 2.5rem; max-width: 100%;">
+      <div class="hero-pain-label">What this looks like in production</div>
+      <p>A voice agent quotes a <strong>drug dosage updated 3 weeks prior</strong>. A legal agent cites a <strong>contract value that was amended</strong>. A clinical copilot surfaces <strong>an allergy note and its contradicting prescription — both</strong>. Your RAG retrieved correctly. Your agent answered wrong. And you have no audit trail to explain why.</p>
+    </div>
     <div class="compare-grid">
       <div class="compare-card compare-rag">
         <div class="compare-header">Plain Vector RAG</div>
