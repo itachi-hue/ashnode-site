@@ -63,17 +63,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #09090b;
-      --surface: #111113;
-      --surface2: #18181b;
-      --border: #1f1f23;
-      --accent: #7c6af7;
-      --accent-dim: #4f46a3;
-      --text: #e4e4e7;
-      --muted: #9a9aa8;
-      --green: #22c55e;
-      --red: #ef4444;
-      --yellow: #eab308;
+      --bg: #ffffff;
+      --surface: #f7f7f8;
+      --surface2: #f0eff9;
+      --border: #e4e4e8;
+      --accent: #6955e8;
+      --accent-dim: #5143c4;
+      --text: #0c0c0e;
+      --muted: #6b6b7a;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #ca8a04;
     }
 
     html { scroll-behavior: smooth; }
@@ -100,7 +100,7 @@
       justify-content: space-between;
       padding: 0 2rem;
       height: 60px;
-      background: rgba(9,9,11,0.9);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
@@ -200,7 +200,7 @@
       top: -200px; left: 50%;
       transform: translateX(-50%);
       width: 900px; height: 900px;
-      background: radial-gradient(circle, rgba(124,106,247,0.1) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(105,85,232,0.06) 0%, transparent 65%);
       pointer-events: none;
     }
 
@@ -366,7 +366,7 @@
     }
 
     /* WHY NOW */
-    .why-now-section { background: var(--surface2); border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .why-now-section { background: var(--surface2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
     .why-now-grid {
       display: grid;
@@ -408,68 +408,57 @@
     .timeline-text { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
     .timeline-text strong { color: var(--text); display: block; margin-bottom: 0.2rem; font-size: 0.92rem; }
 
-    /* COMPARE TABLE — shared grid for perfect row alignment */
-    .compare-table {
+    /* COMPARE TABLE */
+    .compare-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0 1.5rem;
+      gap: 1.5rem;
     }
 
-    @media (max-width: 640px) {
-      .compare-table { grid-template-columns: 1fr; }
-      .compare-table .ct-header.good-col,
-      .compare-table .ct-row.good-col { margin-top: 1rem; }
+    @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+
+    .compare-card {
+      border-radius: 14px;
+      padding: 2rem;
+      border: 1px solid var(--border);
     }
 
-    .ct-header {
-      padding: 1rem 1.25rem;
-      border-radius: 10px 10px 0 0;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
+    .compare-rag { background: var(--surface); }
+
+    .compare-ashnode {
+      background: rgba(105,85,232,0.04);
+      border-color: rgba(105,85,232,0.2);
+    }
+
+    .compare-header {
+      font-size: 0.72rem;
       font-weight: 700;
-      font-size: 0.82rem;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .ct-header.bad-col { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.2); border-bottom: none; color: var(--red); }
-    .ct-header.good-col { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.2); border-bottom: none; color: var(--green); }
-    .ct-header .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .bad-col .dot { background: var(--red); }
-    .good-col .dot { background: var(--green); }
-
-    .ct-row {
-      padding: 0.75rem 1.25rem;
-      font-size: 0.875rem;
-      color: var(--muted);
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      line-height: 1.5;
-      border-left: 1px solid rgba(239,68,68,0.2);
-      border-right: 1px solid rgba(239,68,68,0.2);
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid var(--border);
     }
 
-    .ct-row.good-col {
-      border-left-color: rgba(34,197,94,0.2);
-      border-right-color: rgba(34,197,94,0.2);
+    .compare-rag .compare-header { color: var(--muted); }
+    .compare-ashnode .compare-header { color: var(--accent); border-bottom-color: rgba(105,85,232,0.18); }
+
+    .compare-list { list-style: none; }
+
+    .compare-list li {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border);
     }
 
-    .ct-row.last-row {
-      border-radius: 0 0 10px 10px;
-      border-bottom-color: rgba(239,68,68,0.2);
-    }
-
-    .ct-row.last-row.good-col { border-bottom-color: rgba(34,197,94,0.2); }
-
-    .ct-row::before { flex-shrink: 0; font-size: 0.85rem; }
-    .ct-row.bad-col::before { content: '✗'; color: var(--red); opacity: 0.7; }
-    .ct-row.good-col::before { content: '✓'; color: var(--green); }
+    .compare-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .compare-rag .compare-list li { color: var(--muted); }
+    .compare-ashnode .compare-list li { color: var(--text); }
+    .compare-ashnode .compare-list li { border-bottom-color: rgba(105,85,232,0.1); }
 
     /* FEATURES SECTION SURFACE */
-    .features-section { background: var(--surface2); border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .features-section { background: var(--surface2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
     /* FEATURES */
     .features-top {
@@ -493,18 +482,18 @@
     }
 
     .feature-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: #ffffff;
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.75rem;
       transition: border-color 0.2s;
     }
 
-    .feature-card:hover { border-color: var(--accent-dim); }
+    .feature-card:hover { border-color: var(--accent); }
 
     .feature-card.primary {
-      background: rgba(124,106,247,0.08);
-      border-color: rgba(124,106,247,0.25);
+      background: rgba(105,85,232,0.05);
+      border-color: rgba(105,85,232,0.22);
     }
 
     .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -537,7 +526,7 @@
     .usecase-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
 
     /* FORM */
-    .form-section { border-top: 1px solid var(--border); }
+    .form-section { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface2); }
 
     .form-wrap { max-width: 500px; margin: 0 auto; text-align: center; }
     .form-wrap h2 { margin-bottom: 0.75rem; }
@@ -628,9 +617,9 @@
     .arch-top, .arch-bottom { opacity: 0.8; }
 
     .arch-middle {
-      border-color: rgba(124,106,247,0.6);
-      background: rgba(124,106,247,0.06);
-      box-shadow: 0 0 56px rgba(124,106,247,0.13), 0 0 0 1px rgba(124,106,247,0.18);
+      border-color: rgba(105,85,232,0.5);
+      background: rgba(105,85,232,0.05);
+      box-shadow: 0 4px 32px rgba(105,85,232,0.1), 0 0 0 1px rgba(105,85,232,0.15);
       padding: 1.25rem 1.5rem;
     }
 
@@ -662,8 +651,8 @@
       font-size: 0.69rem;
       padding: 0.22rem 0.65rem;
       border-radius: 999px;
-      background: rgba(124,106,247,0.1);
-      border: 1px solid rgba(124,106,247,0.22);
+      background: rgba(105,85,232,0.08);
+      border: 1px solid rgba(105,85,232,0.2);
       color: var(--text);
     }
 
@@ -887,27 +876,29 @@
       current, what has been superseded, or whether two retrieved facts
       contradict each other. That gap is where agents fail.
     </p>
-    <div class="compare-table">
-      <div class="ct-header bad-col"><span class="dot"></span>Plain Vector RAG</div>
-      <div class="ct-header good-col"><span class="dot"></span>Ashnode</div>
-
-      <div class="ct-row bad-col">Returns all versions of a fact — old and new — equally ranked</div>
-      <div class="ct-row good-col">Superseded facts automatically excluded — only current truth returned</div>
-
-      <div class="ct-row bad-col">No concept of supersession or what "current" means</div>
-      <div class="ct-row good-col">Full supersession chain available when trend queries need history</div>
-
-      <div class="ct-row bad-col">Silently passes contradictions to the LLM</div>
-      <div class="ct-row good-col">Contradictions detected and surfaced within every retrieval</div>
-
-      <div class="ct-row bad-col">No audit trail — impossible to explain why an agent answered as it did</div>
-      <div class="ct-row good-col">Full provenance per item — source, timestamp, decay score, sequence</div>
-
-      <div class="ct-row bad-col">Non-reproducible — same query can return different context</div>
-      <div class="ct-row good-col">Deterministic — same query, same policy, same data = identical response, always</div>
-
-      <div class="ct-row last-row bad-col">No signal when context is incomplete</div>
-      <div class="ct-row last-row good-col">Explicit completeness flag when a policy cap is hit</div>
+    <div class="compare-grid">
+      <div class="compare-card compare-rag">
+        <div class="compare-header">Plain Vector RAG</div>
+        <ul class="compare-list">
+          <li>Returns all versions of a fact — old and new — equally ranked</li>
+          <li>No concept of what is current or what has been replaced</li>
+          <li>Contradictions silently passed to the LLM</li>
+          <li>No audit trail — impossible to explain why an agent answered as it did</li>
+          <li>Same query can return different context on different runs</li>
+          <li>No signal when retrieval is capped or incomplete</li>
+        </ul>
+      </div>
+      <div class="compare-card compare-ashnode">
+        <div class="compare-header">Ashnode</div>
+        <ul class="compare-list">
+          <li>Only current facts returned — old versions automatically retired</li>
+          <li>Full history available on demand when trend queries need it</li>
+          <li>Contradictions detected and surfaced before the LLM sees them</li>
+          <li>Full provenance per item — source, timestamp, freshness, sequence</li>
+          <li>Same query, same policy, same data — identical response, always</li>
+          <li>Explicit flag set when a policy cap is hit — no silent gaps</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
