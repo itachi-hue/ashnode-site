@@ -6,6 +6,10 @@
   <title>Ashnode — The Memory Layer for Production AI Agents</title>
   <meta name="description" content="Ashnode sits between your vector store and your LLM. It gives long-lived agents current facts only, conflict detection, full provenance, and reproducible recall — built for agents that run in production." />
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.svg" />
+
   <!-- Canonical -->
   <link rel="canonical" href="https://tryashnode.com/" />
 
@@ -31,7 +35,7 @@
     "@type": "WebSite",
     "name": "Ashnode",
     "url": "https://tryashnode.com/",
-    "description": "Epistemic memory layer for AI agents. Supersession, contradiction detection, provenance, and deterministic recall.",
+    "description": "The memory layer for production AI agents. Current facts only, conflict detection, full provenance, and reproducible recall.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://tryashnode.com/"
@@ -47,7 +51,7 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Linux, macOS, Windows",
     "url": "https://tryashnode.com/",
-    "description": "Ashnode is an epistemic memory layer for AI agents. It provides bounded, inspectable, deterministic context packets with supersession, contradiction detection, and full provenance.",
+    "description": "Ashnode is the memory layer for production AI agents. It provides current facts only, conflict detection, full provenance, and reproducible recall for agents that run across sessions.",
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -464,6 +468,9 @@
     .ct-row.bad-col::before { content: '✗'; color: var(--red); opacity: 0.7; }
     .ct-row.good-col::before { content: '✓'; color: var(--green); }
 
+    /* FEATURES SECTION SURFACE */
+    .features-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
     /* FEATURES */
     .features-top {
       display: grid;
@@ -486,7 +493,7 @@
     }
 
     .feature-card {
-      background: var(--surface);
+      background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.75rem;
@@ -496,8 +503,8 @@
     .feature-card:hover { border-color: var(--accent-dim); }
 
     .feature-card.primary {
-      background: rgba(124,106,247,0.05);
-      border-color: rgba(124,106,247,0.2);
+      background: rgba(124,106,247,0.08);
+      border-color: rgba(124,106,247,0.25);
     }
 
     .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -862,7 +869,7 @@
           <div class="timeline-year">Now</div>
           <div class="timeline-text">
             <strong>Ashnode fills the gap</strong>
-            Purpose-built epistemic memory. Supersession, contradiction detection, provenance, determinism — as a single API call.
+            A purpose-built memory layer. Current facts, conflict detection, full provenance, reproducible recall — as a single API call.
           </div>
         </div>
       </div>
@@ -897,7 +904,7 @@
       <div class="ct-row good-col">Full provenance per item — source, timestamp, decay score, sequence</div>
 
       <div class="ct-row bad-col">Non-reproducible — same query can return different context</div>
-      <div class="ct-row good-col">Deterministic — same query + policy = identical packet, always</div>
+      <div class="ct-row good-col">Deterministic — same query, same policy, same data = identical response, always</div>
 
       <div class="ct-row last-row bad-col">No signal when context is incomplete</div>
       <div class="ct-row last-row good-col">Explicit completeness flag when a policy cap is hit</div>
@@ -906,7 +913,7 @@
 </section>
 
 <!-- FEATURES -->
-<section id="features">
+<section id="features" class="features-section">
   <div class="container">
     <div class="section-label">Core Capabilities</div>
     <h2>Every failure mode of long-lived<br />agents, addressed by design</h2>
@@ -1076,11 +1083,11 @@
         form.style.display = 'none';
         document.getElementById('formSuccess').style.display = 'block';
       } else {
-        btn.textContent = 'Something went wrong — email vivekbs.10@gmail.com';
+        btn.textContent = 'Something went wrong — email vivek@tryashnode.com';
         btn.disabled = false;
       }
     } catch (_) {
-      btn.textContent = 'Something went wrong — email vivekbs.10@gmail.com';
+      btn.textContent = 'Something went wrong — email vivek@tryashnode.com';
       btn.disabled = false;
     }
   });
