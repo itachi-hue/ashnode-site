@@ -6,6 +6,10 @@
   <title>Why Most Production AI Agents Fail — And the Epistemic Memory Layer That Fixes It</title>
   <meta name="description" content="Most long-lived AI agents fail not because the LLM is wrong — but because their memory is lying to them. Here's the architecture that fixes it." />
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.svg" />
+
   <!-- Canonical -->
   <link rel="canonical" href="https://tryashnode.com/blog/why-ai-agents-need-an-epistemic-memory-layer/" />
 
@@ -61,17 +65,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #09090b;
-      --surface: #111113;
-      --surface2: #18181b;
-      --border: #1f1f23;
-      --accent: #7c6af7;
-      --accent-dim: #4f46a3;
-      --text: #e4e4e7;
-      --muted: #9a9aa8;
-      --green: #22c55e;
-      --red: #ef4444;
-      --yellow: #eab308;
+      --bg: #ffffff;
+      --surface: #f7f7f8;
+      --surface2: #f0eff9;
+      --border: #e4e4e8;
+      --accent: #6955e8;
+      --accent-dim: #5143c4;
+      --text: #0c0c0e;
+      --muted: #6b6b7a;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #ca8a04;
     }
 
     html { scroll-behavior: smooth; }
@@ -98,7 +102,7 @@
       justify-content: space-between;
       padding: 0 2rem;
       height: 60px;
-      background: rgba(9,9,11,0.9);
+      background: rgba(255,255,255,0.92);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
@@ -170,9 +174,9 @@
     }
 
     .article-tag {
-      background: rgba(124,106,247,0.15);
+      background: rgba(105,85,232,0.08);
       color: var(--accent);
-      border: 1px solid rgba(124,106,247,0.3);
+      border: 1px solid rgba(105,85,232,0.22);
       padding: 0.2rem 0.7rem;
       border-radius: 999px;
       font-size: 0.75rem;
@@ -221,7 +225,7 @@
     }
 
     .article-body p {
-      color: #c8c8d2;
+      color: #3a3a45;
       margin-bottom: 1.2rem;
     }
 
@@ -229,7 +233,7 @@
 
     .article-body ul, .article-body ol {
       margin: 0.5rem 0 1.2rem 1.5rem;
-      color: #c8c8d2;
+      color: #3a3a45;
     }
 
     .article-body li { margin-bottom: 0.4rem; }
@@ -256,8 +260,8 @@
 
     /* CODE BLOCKS */
     pre {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: #1c1c28;
+      border: 1px solid #2a2a3a;
       border-radius: 10px;
       padding: 1.5rem;
       overflow-x: auto;
@@ -267,27 +271,37 @@
     }
     code {
       font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
-      color: #c4b5fd;
+      color: var(--accent);
+      background: rgba(105,85,232,0.07);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.88em;
     }
-    pre code { color: #e4e4e7; }
+    pre code {
+      color: #e0e0f0;
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      font-size: inherit;
+    }
     .tok-kw { color: #c4b5fd; }
     .tok-str { color: #86efac; }
-    .tok-comment { color: #52525b; }
+    .tok-comment { color: #5a5a72; }
     .tok-fn { color: #7dd3fc; }
     .tok-num { color: #fbbf24; }
 
     /* CALLOUT BOXES */
     .callout {
-      background: var(--surface);
+      background: var(--surface2);
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       border-radius: 8px;
       padding: 1.25rem 1.5rem;
       margin: 1.5rem 0;
     }
-    .callout.warn { border-left-color: var(--red); }
-    .callout.good { border-left-color: var(--green); }
-    .callout p { margin-bottom: 0; }
+    .callout.warn { background: rgba(220,38,38,0.04); border-left-color: var(--red); border-color: rgba(220,38,38,0.15); }
+    .callout.good { background: rgba(22,163,74,0.04); border-left-color: var(--green); border-color: rgba(22,163,74,0.15); }
+    .callout p { margin-bottom: 0; color: #3a3a45; }
     .callout-label {
       font-size: 0.7rem;
       font-weight: 700;
@@ -305,6 +319,9 @@
       border-collapse: collapse;
       margin: 1.5rem 0;
       font-size: 0.875rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
     }
     .packet-table th {
       background: var(--surface);
@@ -320,10 +337,10 @@
     .packet-table td {
       padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--border);
-      color: #a1a1aa;
+      color: #3a3a45;
       vertical-align: top;
     }
-    .packet-table td:first-child { color: #c4b5fd; font-family: monospace; }
+    .packet-table td:first-child { color: var(--accent); font-family: "SF Mono", "Fira Code", monospace; font-size: 0.85em; }
     .packet-table tr:last-child td { border-bottom: none; }
 
     /* BEFORE / AFTER TABLE */
@@ -332,6 +349,9 @@
       border-collapse: collapse;
       margin: 1.5rem 0 2rem;
       font-size: 0.875rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
     }
     .compare-table th {
       padding: 0.65rem 1rem;
@@ -340,14 +360,15 @@
       letter-spacing: 0.06em;
       text-transform: uppercase;
       text-align: left;
-      border-bottom: 2px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
     }
     .compare-table th:nth-child(2) { color: var(--red); }
     .compare-table th:nth-child(3) { color: var(--green); }
     .compare-table td {
       padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--border);
-      color: #c8c8d2;
+      color: #3a3a45;
       vertical-align: top;
       line-height: 1.5;
     }
@@ -359,15 +380,16 @@
       letter-spacing: 0.04em;
       white-space: nowrap;
       width: 130px;
+      background: var(--surface);
     }
-    .compare-table td:nth-child(2) { background: rgba(239,68,68,0.04); }
-    .compare-table td:nth-child(3) { background: rgba(34,197,94,0.04); }
+    .compare-table td:nth-child(2) { background: rgba(220,38,38,0.03); }
+    .compare-table td:nth-child(3) { background: rgba(22,163,74,0.03); }
     .compare-table tr:last-child td { border-bottom: none; }
 
     /* CTA SECTION */
     .article-cta {
-      background: linear-gradient(135deg, rgba(124,106,247,0.1) 0%, rgba(79,70,163,0.05) 100%);
-      border: 1px solid rgba(124,106,247,0.25);
+      background: var(--surface2);
+      border: 1px solid rgba(105,85,232,0.2);
       border-radius: 16px;
       padding: 2.5rem;
       text-align: center;
@@ -429,7 +451,7 @@
         display: none;
         position: fixed;
         top: 60px; left: 0; right: 0;
-        background: var(--bg);
+        background: rgba(255,255,255,0.98);
         border-bottom: 1px solid var(--border);
         flex-direction: column;
         gap: 0;
@@ -447,7 +469,7 @@
 <body>
 
 <nav>
-  <a class="nav-logo" href="/">Ash<span>node</span></a>
+  <a class="nav-logo" href="/">ash<span>node</span></a>
   <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
     <span></span><span></span><span></span>
   </button>
@@ -455,7 +477,6 @@
     <li><a href="/#why-now">Why Now</a></li>
     <li><a href="/#problem">vs RAG</a></li>
     <li><a href="/#features">Features</a></li>
-    <li><a href="/#code">Quick Start</a></li>
     <li><a href="/blog/why-ai-agents-need-an-epistemic-memory-layer/">Blog</a></li>
     <li><a href="/#access" class="nav-cta">Request Access</a></li>
   </ul>
