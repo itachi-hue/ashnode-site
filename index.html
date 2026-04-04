@@ -192,16 +192,21 @@
       padding: 8rem 1.5rem 5rem;
       position: relative;
       overflow: hidden;
+      background:
+        radial-gradient(ellipse 860px 520px at 50% -60px, rgba(105,85,232,0.11) 0%, transparent 70%),
+        linear-gradient(180deg, #eeecf8 0%, #f5f4fb 28%, #faf9fd 52%, #ffffff 72%);
+      border-bottom: 1px solid var(--border);
     }
 
     .hero::before {
       content: '';
       position: absolute;
-      top: -200px; left: 50%;
-      transform: translateX(-50%);
-      width: 900px; height: 900px;
-      background: radial-gradient(circle, rgba(105,85,232,0.06) 0%, transparent 65%);
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(105,85,232,0.13) 1px, transparent 1px);
+      background-size: 28px 28px;
       pointer-events: none;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 0%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 0%, transparent 100%);
     }
 
     .badge {
